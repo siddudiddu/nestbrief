@@ -137,26 +137,26 @@ var FEATS = [
   {k:'virtualagent',lbl:'Custom virtual agent',hint:'Connect an existing chatbot to handle conversations before escalating to a human.',tp:'pills'},
   {k:'savedreplies',lbl:'Saved replies',hint:'A shared library of pre-approved response templates for common queries.',tp:'pills'},
   {k:'realtime',lbl:'Real-time insights',hint:'Live visibility into agent activity, queue volume, and response times.',tp:'pills'},
-  {k:'contactattribs',lbl:'Contact attributes',hint:'Custom fields agents can view or capture during a conversation.',tp:'text',ph:'e.g. order number, customer tier, booking reference — or None'},
-  {k:'resolvereasons',lbl:'Resolve reasons',hint:'Agents log a reason when closing a conversation.',tp:'text',ph:'e.g. Resolved by agent, Escalated to specialist, Duplicate — or None'},
-  {k:'resolvetopics',lbl:'Resolve topics',hint:'Tag conversations with a topic at resolution for reporting.',tp:'text',ph:'e.g. Delivery issue, Billing query, Product feedback — or None'},
+  {k:'contactattribs',lbl:'Contact attributes',hint:'Custom fields agents can view or capture during a conversation.',tp:'yestext',ph:'e.g. order number, customer tier, booking reference — or None'},
+  {k:'resolvereasons',lbl:'Resolve reasons',hint:'Agents log a reason when closing a conversation.',tp:'yestext',ph:'e.g. Resolved by agent, Escalated to specialist, Duplicate — or None'},
+  {k:'resolvetopics',lbl:'Resolve topics',hint:'Tag conversations with a topic at resolution for reporting.',tp:'yestext',ph:'e.g. Delivery issue, Billing query, Product feedback — or None'},
   {k:'awaystates',lbl:'Away states',hint:'Agents indicate why they are unavailable rather than simply appearing offline.',tp:'pills'},
   {k:'linkshorten',lbl:'Link shortening',hint:'Shorten and track URLs shared in conversations via Bitly.',tp:'pills'},
-  {k:'topics',lbl:'Topics',hint:'Tag and route conversations by topic throughout their lifecycle.',tp:'text',ph:'e.g. Delivery issue, Returns, Complaint, Booking query'},
-  {k:'automations',lbl:'Automations',hint:'Rules that automatically apply topics, tag messages, or resolve conversations.',tp:'text',ph:'e.g. Messages with "refund" apply topic Returns. Spam patterns auto-resolve. Or None'},
-  {k:'skillsets',lbl:'Skill sets',hint:'Route conversations to agents based on specific skills or languages.',tp:'text',ph:'e.g. French-speaking agents, Technical specialists, VIP managers — or None'},
-  {k:'prioritisation',lbl:'Prioritisation',hint:'Certain conversations surface at the top of the queue. Rules can be set on topics, contact groups, channels, and conversation type only.',tp:'text',ph:'e.g. VIP customers, escalated complaints, private messages — or None'},
+  {k:'topics',lbl:'Topics',hint:'Tag and route conversations by topic throughout their lifecycle.',tp:'yestext',ph:'e.g. Delivery issue, Returns, Complaint, Booking query'},
+  {k:'automations',lbl:'Automations',hint:'Rules that automatically apply topics, tag messages, or resolve conversations.',tp:'yestext',ph:'e.g. Messages with "refund" apply topic Returns. Spam patterns auto-resolve. Or None'},
+  {k:'skillsets',lbl:'Skill sets',hint:'Route conversations to agents based on specific skills or languages.',tp:'yestext',ph:'e.g. French-speaking agents, Technical specialists, VIP managers — or None'},
+  {k:'prioritisation',lbl:'Prioritisation',hint:'Certain conversations surface at the top of the queue. Rules can be set on topics, contact groups, channels, and conversation type only.',tp:'yestext',ph:'e.g. VIP customers, escalated complaints, private messages — or None'},
   {k:'contactgroups',lbl:'Contact groups',hint:'Segment contacts into groups for routing or reporting rules.',tp:'pills'},
   {k:'removeassignment',lbl:'Remove assignment',hint:'Conversations automatically unassigned when reopened or agent goes offline.',tp:'pills'},
   {k:'langdetect',lbl:'Language detection',hint:'Detect message language and route to agents with the right language skills.',tp:'pillsplus',plusLbl:'Which languages?',plusPh:'e.g. French, Spanish, German'},
-  {k:'sla',lbl:'SLA policies',hint:'Target first response and resolution times.',tp:'text',ph:'e.g. FRT 1 hour all channels, or None'},
+  {k:'sla',lbl:'SLA policies',hint:'Target first response and resolution times.',tp:'yestext',ph:'e.g. FRT 1 hour all channels, or None'},
   {k:'queueprefs',lbl:'Queue preferences',hint:'Control how conversations are distributed to agents.',tp:'pills'},
   {k:'teamsettings',lbl:'Team settings',hint:'Separate queue behaviour or capacity rules per team.',tp:'pills'},
-  {k:'knowledge',lbl:'Knowledge Centre',hint:'Existing knowledge base or FAQ content to power AI-suggested responses.',tp:'text',ph:'e.g. Help centre at yoursite.com/help (HTML), internal wiki — or None'},
+  {k:'knowledge',lbl:'Knowledge Centre',hint:'Existing knowledge base or FAQ content to power AI-suggested responses.',tp:'yestext',ph:'e.g. Help centre at yoursite.com/help (HTML), internal wiki — or None'},
   {k:'chatbot',lbl:'Generative AI chatbot',hint:'Deploy an AI chatbot to handle common queries before involving a human.',tp:'pills'},
   {k:'smartreplies',lbl:'Smart replies',hint:'AI suggests contextually relevant responses to agents in real time.',tp:'pills'},
-  {k:'channels',lbl:'Channels',hint:'Which social and messaging channels are active now and planned?',tp:'text',ph:'e.g. Twitter/X, Facebook (pages + Messenger), Instagram. Planning WhatsApp in 6 months.'},
-  {k:'crm',lbl:'CRM integration',hint:'Customer data visible during conversations, or written back after resolution.',tp:'text',ph:'e.g. Salesforce — booking reference visible. Case created on resolve. Or None'},
+  {k:'channels',lbl:'Channels',hint:'Which social and messaging channels are active now and planned?',tp:'yestext',ph:'e.g. Twitter/X, Facebook (pages + Messenger), Instagram. Planning WhatsApp in 6 months.'},
+  {k:'crm',lbl:'CRM integration',hint:'Customer data visible during conversations, or written back after resolution.',tp:'yestext',ph:'e.g. Salesforce — booking reference visible. Case created on resolve. Or None'},
   {k:'deletedcontacts',lbl:'Deleted contacts',hint:'Permanently remove contact records (e.g. GDPR right-to-erasure).',tp:'pills'},
   {k:'pii',lbl:'PII handling',hint:'Customers share sensitive information that needs secure capture or masking.',tp:'pills'},
   {k:'muted',lbl:'Muted contacts',hint:'Suppress notifications for specific contacts such as repeat spam accounts.',tp:'pills'},
@@ -230,7 +230,7 @@ function pillSideEffect(id, grp){
     S.features[key] = S.features[key]||{};
     S.features[key].answer = map[ans]||ans;
     var f = FEATS.find(function(x){return x.k===key;});
-    if(f && f.tp==='pillsplus'){ ans==='yes' ? show('feat-plus') : hide('feat-plus'); }
+    if(f && (f.tp==='pillsplus'||f.tp==='yestext')){ ans==='yes' ? show('feat-plus') : hide('feat-plus'); }
   }
 }
 
@@ -246,13 +246,14 @@ function savePill(id, grp){
 
 function inferInd(n){
   n = n.toLowerCase();
-  if(/bank|financ|insur|invest|capital|wealth|credit|loan|mortgage/.test(n)) return 'Financial services';
-  if(/health|hospital|clinic|pharma|medic|nhs|dental/.test(n)) return 'Healthcare';
-  if(/tech|software|saas|app|cloud|digital|\.io|ai /.test(n)) return 'Technology / SaaS';
-  if(/food|drink|cafe|coffee|restaurant|bakery|brewery|wine|beer|greggs|pret|kfc|mcdo/.test(n)) return 'Food & beverage';
-  if(/airline|aviation|airport|flight|travel|hotel|hospitality|tour|holiday/.test(n)) return 'Travel & hospitality';
-  if(/retail|shop|store|fashion|apparel|clothes|ecom/.test(n)) return 'Retail / e-commerce';
-  if(/fc|united|city|rovers|sport|rugby|cricket/.test(n)) return 'Soccer / sports';
+  if(/bank|financ|insur|invest|capital|wealth|credit|loan|mortgage|barclays|hsbc|lloyds|natwest|santander|goldman|jpmorgan|visa|mastercard/.test(n)) return 'Financial services';
+  if(/health|hospital|clinic|pharma|medic|nhs|dental|bupa|axa|boots|pfizer|nhs/.test(n)) return 'Healthcare';
+  if(/tech|software|saas|app|cloud|digital|\.io|salesforce|hubspot|slack|zoom|microsoft|google|apple|meta|amazon|netflix|spotify/.test(n)) return 'Technology / SaaS';
+  if(/food|drink|cafe|coffee|restaurant|bakery|brewery|wine|beer|spirits|pub|cola|pepsi|coca|starbucks|mcdon|burger|kfc|subway|greggs|pret|nando|domino|pizza|heinz|nestle|unilever|danone|innocent|oatly|deliveroo|uber.eat|just.eat|takeaway|fmcg|snack|confect|cadbury|mars |haribo|walkers|pringles|redbull|monster |lucozade|ribena|tropicana|fanta|sprite|schweppes|tango|vimto/.test(n)) return 'Food & beverage';
+  if(/airline|aviation|airport|flight|travel|hotel|hospitality|tour|holiday|easyjet|ryanair|british.air|virgin.atl|tui|booking|expedia|airbnb|hilton|marriott|hyatt/.test(n)) return 'Travel & hospitality';
+  if(/retail|shop|store|fashion|apparel|clothes|ecom|amazon|ebay|asos|zara|h&m|primark|marks|spencer|tesco|sainsbury|asda|morrisons|waitrose|ocado|next |argos|currys|john.lewis/.test(n)) return 'Retail / e-commerce';
+  if(/fc|united|city|rovers|sport|rugby|cricket|arsenal|chelsea|liverpool|tottenham|everton|leicester|leeds|newcastle|aston.villa|west.ham|wolves|brighton|brentford|forest/.test(n)) return 'Soccer / sports';
+  if(/council|gov|government|public sector|ngo|charity|foundation|trust|nhs/.test(n)) return 'Public sector / non-profit';
   return 'General / other';
 }
 
@@ -730,7 +731,7 @@ function renderFeat(a, key){
   if(!f) return;
   var val = S.features[key]||{};
   var inputHtml = '';
-  if(f.tp==='pills'||f.tp==='pillsplus'){
+  if(f.tp==='pills'||f.tp==='pillsplus'||f.tp==='yestext'){
     inputHtml = h('div','pills',
       pill('Yes','feat-yes','feat',false)+
       pill('No','feat-no','feat',false)+
@@ -740,6 +741,14 @@ function renderFeat(a, key){
       inputHtml += h('div','q-card hidden',
         h('div','q-label',f.plusLbl)+
         '<input type="text" id="feat-plus-inp" placeholder="'+f.plusPh+'" value="'+(val.extra||'')+'" oninput="S.features[\''+key+'\']=S.features[\''+key+'\']||{};S.features[\''+key+'\'].extra=this.value">',
+        'id="feat-plus"'
+      );
+    }
+    if(f.tp==='yestext'){
+      var ytVal = (val.answer==='Yes') ? (val.value||'') : '';
+      inputHtml += h('div','q-card hidden',
+        h('div','q-label','Please provide details')+
+        '<textarea id="feat-txt" placeholder="'+(f.ph||'')+'" oninput="S.features[\''+key+'\']=S.features[\''+key+'\']||{};S.features[\''+key+'\'].value=this.value">'+ytVal+'</textarea>',
         'id="feat-plus"'
       );
     }
@@ -763,7 +772,7 @@ function renderFeat(a, key){
     if(ans){
       var amap={'Yes':'feat-yes','No':'feat-no','Not sure':'feat-ns'};
       if(amap[ans]){ selPill(amap[ans]); pillSideEffect(amap[ans],'feat'); }
-    }
+    } else if(f.tp==='yestext' && val.value){ selPill('feat-yes'); pillSideEffect('feat-yes','feat'); }
   },50);
 }
 
