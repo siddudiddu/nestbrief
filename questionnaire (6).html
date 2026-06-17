@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Hootsuite Nest — Setup Questionnaire</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ac:#FF4C46;--ac2:#1A1A1A;--pale:rgba(255,76,70,0.07);
+  --f:'Montserrat',sans-serif;--border:#e2e2e2;--bg:#fff;--bg2:#f8f8f8;
+  --text:#111;--mid:#555;--hint:#999;--rm:8px;--rl:12px;
+}
+body{font-family:var(--f);background:#f4f4f4;color:var(--text);line-height:1.6;min-height:100vh}
+.page{max-width:680px;margin:0 auto;padding:2rem 1.25rem 6rem}
+.cover{text-align:center;padding:4rem 1.5rem 3rem}
+.hs-chip{background:var(--ac);color:#fff;font-size:11px;font-weight:600;padding:3px 9px;border-radius:3px}
+.cover-logo{display:inline-flex;align-items:center;gap:10px;margin-bottom:2rem}
+.cover-wordmark{font-size:14px;font-weight:600;color:var(--ac)}
+.cover h1{font-size:26px;font-weight:600;color:var(--text);margin-bottom:.75rem;line-height:1.25}
+.cover p{font-size:14px;color:var(--mid);margin-bottom:1.5rem;line-height:1.7}
+.cover-meta{display:flex;justify-content:center;gap:2rem;font-size:12px;color:var(--hint);margin-bottom:2rem}
+.progress-bar{background:#fff;border-radius:var(--rl);padding:1rem 1.25rem;margin-bottom:1.5rem;border:.5px solid var(--border)}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:.75rem}
+.progress-label{font-size:12px;font-weight:600;color:var(--text)}
+.progress-pct{font-size:12px;color:var(--ac);font-weight:600}
+.progress-track{height:4px;background:#ebebeb;border-radius:2px;overflow:hidden}
+.progress-fill{height:4px;background:var(--ac);border-radius:2px;transition:width .4s ease}
+.session-dots{display:flex;gap:8px;margin-top:.75rem}
+.sdot{height:6px;flex:1;border-radius:3px;background:#ebebeb;transition:background .3s}
+.sdot.done{background:var(--ac)}.sdot.active{background:var(--ac);opacity:.5}
+.section-header{margin:2rem 0 1.25rem}
+.section-tag{font-size:10px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--ac);margin-bottom:4px}
+.section-title{font-size:20px;font-weight:600;color:var(--text);margin-bottom:4px}
+.section-desc{font-size:13px;color:var(--mid)}
+.q-card{background:#fff;border-radius:var(--rl);border:.5px solid var(--border);padding:1.25rem;margin-bottom:1rem}
+.q-card.active{border-color:var(--ac)}
+.q-label{font-size:13px;font-weight:600;color:var(--text);margin-bottom:.25rem}
+.q-hint{font-size:11.5px;color:var(--hint);margin-bottom:.875rem;line-height:1.5}
+.q-req{color:var(--ac);margin-left:2px}
+.pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.pill-btn{padding:6px 14px;border-radius:20px;border:.5px solid var(--border);background:#fff;font-size:12px;font-weight:500;color:var(--mid);cursor:pointer;font-family:var(--f);transition:all .15s}
+.pill-btn:hover{border-color:var(--ac);color:var(--ac)}
+.pill-btn.on{background:var(--ac);border-color:var(--ac);color:#fff}
+input[type=text],input[type=email],textarea,select{width:100%;padding:9px 12px;border-radius:var(--rm);border:.5px solid var(--border);font-family:var(--f);font-size:13px;color:var(--text);background:#fff;outline:none;transition:border-color .15s}
+input[type=text]:focus,input[type=email]:focus,textarea:focus{border-color:var(--ac)}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+input[type=color]{width:48px;height:40px;padding:3px;border-radius:var(--rm);border:.5px solid var(--border);cursor:pointer}
+input[type=range]{flex:1;accent-color:var(--ac)}
+.slider-wrap{display:flex;align-items:center;gap:12px;margin:8px 0 16px}
+.slider-val{font-size:14px;font-weight:600;color:var(--ac);min-width:52px;text-align:right}
+.color-row{display:flex;align-items:center;gap:10px;margin-top:8px}
+.color-swatch{width:36px;height:36px;border-radius:var(--rm);border:.5px solid var(--border);flex-shrink:0}
+.sample-card{background:var(--bg2);border-radius:var(--rm);padding:10px 14px;margin-bottom:.75rem;border:.5px solid var(--border)}
+.sample-net{font-size:10px;font-weight:600;color:var(--hint);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.sample-txt{font-size:13px;color:var(--text);margin-bottom:10px;line-height:1.4}
+.sample-actions{display:flex;gap:6px;flex-wrap:wrap}
+.act-btn{padding:5px 12px;border-radius:14px;font-size:11px;font-weight:600;cursor:pointer;border:none;font-family:var(--f)}
+.act-reply{background:#22863a;color:#fff}.act-ignore{background:#d73a49;color:#fff}.act-escalate{background:#e36209;color:#fff}
+.act-btn.on{opacity:.6}
+.sample-extra{margin-top:8px;display:none;flex-direction:column;gap:6px}
+.sample-extra.show{display:flex}
+.review-section{background:#fff;border-radius:var(--rl);border:.5px solid var(--border);margin-bottom:1rem;overflow:hidden}
+.review-head{display:flex;align-items:center;justify-content:space-between;padding:.875rem 1.25rem;background:var(--pale);border-bottom:.5px solid var(--border)}
+.review-head-title{font-size:13px;font-weight:600;color:var(--text)}
+.review-edit{font-size:11px;color:var(--ac);cursor:pointer;font-weight:500}
+.review-body{padding:.875rem 1.25rem}
+.review-row{display:flex;gap:8px;padding:5px 0;border-bottom:.5px solid #f0f0f0;font-size:12px}
+.review-row:last-child{border-bottom:none}
+.review-q{color:var(--hint);min-width:150px;flex-shrink:0}
+.review-a{color:var(--text);font-weight:500}
+.complete-screen{text-align:center;padding:3rem 1.5rem}
+.complete-icon{width:64px;height:64px;background:var(--pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:28px}
+.complete-title{font-size:22px;font-weight:600;color:var(--text);margin-bottom:.75rem}
+.complete-desc{font-size:14px;color:var(--mid);margin-bottom:2rem;line-height:1.7}
+.btn-wrap{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto}
+.nav-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:.5px solid var(--border);padding:.875rem 1.25rem;display:flex;justify-content:space-between;align-items:center;z-index:100}
+.nav-hint{font-size:11px;color:var(--hint)}
+.btn{padding:9px 22px;border-radius:var(--rm);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--f);border:none;transition:opacity .15s}
+.btn:hover{opacity:.85}
+.btn-primary{background:var(--ac);color:#fff}
+.btn-secondary{background:transparent;color:var(--mid);border:.5px solid var(--border)}
+.btn-success{background:#22863a;color:#fff;width:100%;padding:11px}
+.btn-dl{background:transparent;color:var(--mid);border:.5px solid var(--border);width:100%;padding:11px}
+.btn-group{display:flex;gap:8px}
+.hidden{display:none!important}
+.err{font-size:11px;color:#d73a49;text-align:center;padding:.4rem;margin-bottom:.4rem}
+.session-intro{text-align:center;padding:2.5rem 1rem}
+.s-icon{width:56px;height:56px;background:var(--pale);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;font-size:24px}
+.s-title{font-size:20px;font-weight:600;margin-bottom:.75rem}
+.s-desc{font-size:13px;color:var(--mid);line-height:1.7;max-width:480px;margin:0 auto 1rem}
+.s-time{font-size:12px;color:var(--hint)}
+@media(max-width:500px){.cover h1{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="page" id="app"></div>
+<div class="nav-bar" id="nav-bar">
+  <span class="nav-hint" id="nav-hint">Session 1 of 3</span>
+  <div class="btn-group">
+    <button class="btn btn-secondary hidden" id="btn-back" onclick="goBack()">Back</button>
+    <button class="btn btn-primary" id="btn-next" onclick="goNext()">Start &rarr;</button>
+  </div>
+</div>
+<script>
+var CONSULTANT = 'siddharth.amin@hootsuite.com'; // Change for each deployment
+
+var S = {
+  step:0, brandPrimary:'#FF4C46', brandSecondary:'#1A1A1A',
+  company:'', industry:'', indConfirmed:false,
+  role:'', volNum:100, volPeriod:'', manageable:'', manageableDetail:'',
+  workType:'', specialMsgs:'', respondTo:[], ignore:[],
+  samples:[], agentCount:20, hasTeams:'', teamDetail:'',
+  chanRouting:'', chanDetail:'', shifts:'', shiftsDetail:'',
+  features:{}, consultantEmail:CONSULTANT
+};
+
+var MSGS = [
+  {net:'Instagram',msg:'Love this! Best thing you\'ve ever made'},
+  {net:'Twitter/X',msg:'Your website is completely broken, can\'t place an order'},
+  {net:'Facebook',msg:'What are your opening hours this bank holiday?'},
+  {net:'Instagram',msg:'first'},
+  {net:'Twitter/X',msg:'This is genuinely the worst experience I\'ve ever had with a brand'},
+  {net:'Facebook',msg:'Do you cater for nut allergies? My son has a severe reaction'},
+  {net:'Instagram',msg:'Do you deliver to Scotland?'},
+  {net:'Twitter/X',msg:'Buy cheap followers now DM us #marketing'},
+  {net:'Facebook',msg:'Your team went above and beyond today, shoutout to the team!'},
+  {net:'Instagram',msg:'Would love to collab! Check out our page'}
+];
+
+var FEATS = [
+  {k:'autoresponder',lbl:'Autoresponder',hint:'Automatic acknowledgements when customers contact you outside hours or during high volume.',tp:'pills'},
+  {k:'csat',lbl:'CSAT surveys',hint:'Automatically send satisfaction surveys after conversations are resolved.',tp:'pills'},
+  {k:'virtualagent',lbl:'Custom virtual agent',hint:'Connect an existing chatbot to handle conversations before escalating to a human.',tp:'pills'},
+  {k:'savedreplies',lbl:'Saved replies',hint:'A shared library of pre-approved response templates for common queries.',tp:'pills'},
+  {k:'realtime',lbl:'Real-time insights',hint:'Live visibility into agent activity, queue volume, and response times.',tp:'pills'},
+  {k:'contactattribs',lbl:'Contact attributes',hint:'Custom fields agents can view or capture during a conversation.',tp:'text',ph:'e.g. order number, customer tier, booking reference — or None'},
+  {k:'resolvereasons',lbl:'Resolve reasons',hint:'Agents log a reason when closing a conversation.',tp:'text',ph:'e.g. Resolved by agent, Escalated to specialist, Duplicate — or None'},
+  {k:'resolvetopics',lbl:'Resolve topics',hint:'Tag conversations with a topic at resolution for reporting.',tp:'text',ph:'e.g. Delivery issue, Billing query, Product feedback — or None'},
+  {k:'awaystates',lbl:'Away states',hint:'Agents indicate why they are unavailable rather than simply appearing offline.',tp:'pills'},
+  {k:'linkshorten',lbl:'Link shortening',hint:'Shorten and track URLs shared in conversations via Bitly.',tp:'pills'},
+  {k:'topics',lbl:'Topics',hint:'Tag and route conversations by topic throughout their lifecycle.',tp:'text',ph:'e.g. Delivery issue, Returns, Complaint, Booking query'},
+  {k:'automations',lbl:'Automations',hint:'Rules that automatically apply topics, tag messages, or resolve conversations.',tp:'text',ph:'e.g. Messages with "refund" apply topic Returns. Spam patterns auto-resolve. Or None'},
+  {k:'skillsets',lbl:'Skill sets',hint:'Route conversations to agents based on specific skills or languages.',tp:'text',ph:'e.g. French-speaking agents, Technical specialists, VIP managers — or None'},
+  {k:'prioritisation',lbl:'Prioritisation',hint:'Certain conversations surface at the top of the queue. Rules can be set on topics, contact groups, channels, and conversation type only.',tp:'text',ph:'e.g. VIP customers, escalated complaints, private messages — or None'},
+  {k:'contactgroups',lbl:'Contact groups',hint:'Segment contacts into groups for routing or reporting rules.',tp:'pills'},
+  {k:'removeassignment',lbl:'Remove assignment',hint:'Conversations automatically unassigned when reopened or agent goes offline.',tp:'pills'},
+  {k:'langdetect',lbl:'Language detection',hint:'Detect message language and route to agents with the right language skills.',tp:'pillsplus',plusLbl:'Which languages?',plusPh:'e.g. French, Spanish, German'},
+  {k:'sla',lbl:'SLA policies',hint:'Target first response and resolution times.',tp:'text',ph:'e.g. FRT 1 hour all channels, or None'},
+  {k:'queueprefs',lbl:'Queue preferences',hint:'Control how conversations are distributed to agents.',tp:'pills'},
+  {k:'teamsettings',lbl:'Team settings',hint:'Separate queue behaviour or capacity rules per team.',tp:'pills'},
+  {k:'knowledge',lbl:'Knowledge Centre',hint:'Existing knowledge base or FAQ content to power AI-suggested responses.',tp:'text',ph:'e.g. Help centre at yoursite.com/help (HTML), internal wiki — or None'},
+  {k:'chatbot',lbl:'Generative AI chatbot',hint:'Deploy an AI chatbot to handle common queries before involving a human.',tp:'pills'},
+  {k:'smartreplies',lbl:'Smart replies',hint:'AI suggests contextually relevant responses to agents in real time.',tp:'pills'},
+  {k:'channels',lbl:'Channels',hint:'Which social and messaging channels are active now and planned?',tp:'text',ph:'e.g. Twitter/X, Facebook (pages + Messenger), Instagram. Planning WhatsApp in 6 months.'},
+  {k:'crm',lbl:'CRM integration',hint:'Customer data visible during conversations, or written back after resolution.',tp:'text',ph:'e.g. Salesforce — booking reference visible. Case created on resolve. Or None'},
+  {k:'deletedcontacts',lbl:'Deleted contacts',hint:'Permanently remove contact records (e.g. GDPR right-to-erasure).',tp:'pills'},
+  {k:'pii',lbl:'PII handling',hint:'Customers share sensitive information that needs secure capture or masking.',tp:'pills'},
+  {k:'muted',lbl:'Muted contacts',hint:'Suppress notifications for specific contacts such as repeat spam accounts.',tp:'pills'},
+  {k:'autoclear',lbl:'Auto-clear attributes',hint:'Contact attribute data purged automatically after a retention period.',tp:'pillsplus',plusLbl:'After how long?',plusPh:'e.g. 12 months, 24 months'}
+];
+
+var STEPS = ['cover','brand','company','industry','role','volume','manageable',
+  'worktype','special','respondto','ignore','samples',
+  's2intro','agents','teams','chanrouting','shifts'];
+
+FEATS.forEach(function(f){ STEPS.push('feat_'+f.k); });
+STEPS.push('s3intro','review','complete');
+
+function el(id){ return document.getElementById(id); }
+function app(){ return el('app'); }
+
+function applyBrand(){
+  var r = document.documentElement;
+  r.style.setProperty('--ac', S.brandPrimary);
+  r.style.setProperty('--ac2', S.brandSecondary);
+  var hex = S.brandPrimary;
+  var rv=parseInt(hex.slice(1,3),16), gv=parseInt(hex.slice(3,5),16), bv=parseInt(hex.slice(5,7),16);
+  r.style.setProperty('--pale','rgba('+rv+','+gv+','+bv+',0.07)');
+}
+
+function pill(lbl, id, grp, multi){
+  var m = multi ? 'true' : 'false';
+  return '<button class="pill-btn" id="'+id+'" onclick="hp(\''+id+'\',\''+grp+'\','+m+')">'+lbl+'</button>';
+}
+
+function pills3(grp, val){
+  return '<div class="pills">'+
+    pill('Yes',grp+'-yes',grp,false)+
+    pill('No',grp+'-no',grp,false)+
+    pill('Not sure',grp+'-ns',grp,false)+
+  '</div>';
+}
+
+function selPill(id){
+  var b = el(id); if(b){ b.classList.add('on'); }
+}
+
+function hp(id, grp, multi){
+  if(!multi){
+    var all = document.querySelectorAll('[id^="'+grp+'-"]');
+    for(var i=0;i<all.length;i++) all[i].classList.remove('on');
+    var b = el(id); if(b) b.classList.add('on');
+    pillSideEffect(id, grp);
+    savePill(id, grp);
+  } else {
+    var b2 = el(id);
+    if(b2){ if(b2.classList.contains('on')) b2.classList.remove('on'); else b2.classList.add('on'); }
+  }
+}
+
+function pillSideEffect(id, grp){
+  function show(cid){ var c=el(cid); if(c) c.classList.remove('hidden'); }
+  function hide(cid){ var c=el(cid); if(c) c.classList.add('hidden'); }
+  if(grp==='ic'){ id==='ic-no' ? show('ind-spec') : hide('ind-spec'); }
+  if(grp==='role'){ id==='role-other' ? show('role-oth') : hide('role-oth'); }
+  if(grp==='mgmt'){ id==='mgmt-dep' ? show('mgmt-det') : hide('mgmt-det'); }
+  if(grp==='wt'){ id==='wt-other' ? show('wt-oth') : hide('wt-oth'); }
+  if(grp==='teams'){ (id==='teams-yes'||id==='teams-plan') ? show('teams-det') : hide('teams-det'); }
+  if(grp==='cr'){ id==='cr-yes' ? show('cr-det') : hide('cr-det'); }
+  if(grp==='shifts'){ id!=='shifts-247' ? show('shifts-det') : hide('shifts-det'); }
+  if(grp==='feat'){
+    var step = STEPS[S.step];
+    var key = step.replace('feat_','');
+    var ans = id.replace('feat-','');
+    var map = {'yes':'Yes','no':'No','ns':'Not sure'};
+    S.features[key] = S.features[key]||{};
+    S.features[key].answer = map[ans]||ans;
+    var f = FEATS.find(function(x){return x.k===key;});
+    if(f && f.tp==='pillsplus'){ ans==='yes' ? show('feat-plus') : hide('feat-plus'); }
+  }
+}
+
+function savePill(id, grp){
+  if(grp==='period') S.volPeriod = id.replace('period-','');
+  if(grp==='mgmt') S.manageable = id.replace('mgmt-','');
+  if(grp==='wt') S.workType = {'wt-cm':'Community management','wt-cc':'Customer care','wt-both':'Both','wt-other':'Other'}[id]||'';
+  if(grp==='teams') S.hasTeams = id.replace('teams-','');
+  if(grp==='cr') S.chanRouting = id.replace('cr-','');
+  if(grp==='shifts') S.shifts = id.replace('shifts-','');
+  if(grp==='role') S.role = {'role-sm':'Social media manager','role-cm':'Community manager','role-cca':'Customer care agent','role-tl':'Team lead or manager','role-other':'Other'}[id]||'';
+}
+
+function inferInd(n){
+  n = n.toLowerCase();
+  if(/bank|financ|insur|invest|capital|wealth|credit|loan|mortgage/.test(n)) return 'Financial services';
+  if(/health|hospital|clinic|pharma|medic|nhs|dental/.test(n)) return 'Healthcare';
+  if(/tech|software|saas|app|cloud|digital|\.io|ai /.test(n)) return 'Technology / SaaS';
+  if(/food|drink|cafe|coffee|restaurant|bakery|brewery|wine|beer|greggs|pret|kfc|mcdo/.test(n)) return 'Food & beverage';
+  if(/airline|aviation|airport|flight|travel|hotel|hospitality|tour|holiday/.test(n)) return 'Travel & hospitality';
+  if(/retail|shop|store|fashion|apparel|clothes|ecom/.test(n)) return 'Retail / e-commerce';
+  if(/fc|united|city|rovers|sport|rugby|cricket/.test(n)) return 'Soccer / sports';
+  return 'General / other';
+}
+
+function indExamples(ind){
+  var m = {
+    'Financial services':'regulatory complaints, data breach concerns, fraud reports',
+    'Healthcare':'medical advice requests, patient safety concerns, prescription queries',
+    'Technology / SaaS':'service outages, data loss reports, security vulnerability disclosures',
+    'Food & beverage':'allergen and contamination concerns, food safety complaints, foreign object reports',
+    'Travel & hospitality':'flight disruption, accessibility or medical needs, stranded passengers',
+    'Retail / e-commerce':'refund disputes, order errors, delivery failures',
+    'Soccer / sports':'player welfare abuse, gambling content (never engage), injury or transfer speculation'
+  };
+  return m[ind]||'industry-specific escalations, regulated or sensitive queries, crisis or safety messages';
+}
+
+function render(){
+  applyBrand();
+  var step = STEPS[S.step];
+  updateNav();
+  updateProgress();
+  var a = app();
+
+  if(step==='cover'){ renderCover(a); return; }
+  if(step==='brand'){ renderBrand(a); return; }
+  if(step==='company'){ renderCompany(a); return; }
+  if(step==='industry'){ renderIndustry(a); return; }
+  if(step==='role'){ renderRole(a); return; }
+  if(step==='volume'){ renderVolume(a); return; }
+  if(step==='manageable'){ renderManageable(a); return; }
+  if(step==='worktype'){ renderWorkType(a); return; }
+  if(step==='special'){ renderSpecial(a); return; }
+  if(step==='respondto'){ renderRespondTo(a); return; }
+  if(step==='ignore'){ renderIgnore(a); return; }
+  if(step==='samples'){ renderSamples(a); return; }
+  if(step==='s2intro'){ renderS2Intro(a); return; }
+  if(step==='agents'){ renderAgents(a); return; }
+  if(step==='teams'){ renderTeams(a); return; }
+  if(step==='chanrouting'){ renderChanRouting(a); return; }
+  if(step==='shifts'){ renderShifts(a); return; }
+  if(step.indexOf('feat_')===0){ renderFeat(a, step.replace('feat_','')); return; }
+  if(step==='s3intro'){ renderS3Intro(a); return; }
+  if(step==='review'){ renderReview(a); return; }
+  if(step==='complete'){ renderComplete(a); return; }
+}
+
+function h(tag,cls,content,attrs){
+  return '<'+tag+(cls?' class="'+cls+'"':'')+(attrs?' '+attrs:'')+'>'+content+'</'+tag+'>';
+}
+
+function renderCover(a){
+  a.innerHTML =
+    h('div','cover',
+      h('div','cover-logo', h('span','hs-chip','Hootsuite')+'&nbsp;&nbsp;'+h('span','cover-wordmark','Nest setup questionnaire'))+
+      h('h1','','Configure your Nest workspace')+
+      h('p','','This questionnaire collects everything your Hootsuite implementation consultant needs to set up Nest for your team. It takes about 20&ndash;25 minutes and covers your team structure, workflows, and feature requirements.')+
+      h('div','cover-meta',
+        h('span','','&#9679; 3 sessions')+h('span','','&#9679; ~25 minutes')+h('span','','&#9679; All data stays in your browser')
+      )+
+      h('p','',h('small','','style="color:#bbb"','Your responses will be prepared for email to your Hootsuite consultant as a JSON file.'))
+    );
+}
+
+function renderBrand(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Before we begin')+
+      h('div','section-title','Your brand colours')+
+      h('div','section-desc','We\'ll apply your brand colours to this questionnaire as you go.')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Primary brand colour')+
+      h('div','q-hint','Your main brand colour — used for buttons and highlights.')+
+      h('div','color-row',
+        '<input type="color" id="bp" value="'+S.brandPrimary+'" oninput="S.brandPrimary=this.value;applyBrand();el(\'bph\').value=this.value;el(\'bpsw\').style.background=this.value">'+
+        h('div','color-swatch','','id="bpsw" style="background:'+S.brandPrimary+'"')+
+        '<input type="text" id="bph" value="'+S.brandPrimary+'" placeholder="#FF4C46" style="width:120px" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){S.brandPrimary=this.value;applyBrand();el(\'bp\').value=this.value;el(\'bpsw\').style.background=this.value}">'
+      )
+    )+
+    h('div','q-card',
+      h('div','q-label','Secondary brand colour')+
+      h('div','q-hint','A supporting colour for contrast. Leave as dark if unsure.')+
+      h('div','color-row',
+        '<input type="color" id="bs" value="'+S.brandSecondary+'" oninput="S.brandSecondary=this.value;applyBrand();el(\'bsh\').value=this.value;el(\'bssw\').style.background=this.value">'+
+        h('div','color-swatch','','id="bssw" style="background:'+S.brandSecondary+'"')+
+        '<input type="text" id="bsh" value="'+S.brandSecondary+'" placeholder="#1A1A1A" style="width:120px" oninput="if(/^#[0-9A-Fa-f]{6}$/.test(this.value)){S.brandSecondary=this.value;applyBrand();el(\'bs\').value=this.value;el(\'bssw\').style.background=this.value}">'
+      )
+    );
+}
+
+function renderCompany(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 1 of 6 &mdash; About you')+
+      h('div','section-title','About your organisation')
+    )+
+    h('div','q-card active',
+      h('div','q-label','What is your company name? '+h('span','q-req','*'))+
+      '<input type="text" id="co" value="'+S.company+'" placeholder="e.g. Acme Corp" oninput="S.company=this.value">'
+    );
+  setTimeout(function(){ var e=el('co'); if(e) e.focus(); },100);
+}
+
+function renderIndustry(a){
+  if(!S.indConfirmed) S.industry = inferInd(S.company);
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 1 of 6 &mdash; About you')+
+      h('div','section-title','Confirm your industry')
+    )+
+    h('div','q-card active',
+      h('div','q-label','I\'m reading '+h('strong','',S.company)+' as operating in:')+
+      h('div','','','style="font-size:14px;font-weight:600;color:var(--text);margin:8px 0 16px"')+
+      '<div style="font-size:14px;font-weight:600;color:var(--text);margin:8px 0 16px">'+S.industry+'</div>'+
+      h('div','q-label','Is that right?')+
+      h('div','pills',pill('Yes, that\'s right','ic-yes','ic',false)+pill('No, let me specify','ic-no','ic',false))
+    )+
+    h('div','q-card hidden','','id="ind-spec"')+
+    '';
+  var specCard = el('ind-spec');
+  if(specCard){
+    specCard.innerHTML = h('div','q-label','What industry does '+S.company+' operate in?')+
+      '<input type="text" id="ind-inp" value="" placeholder="e.g. Healthcare, Financial services, Retail" oninput="S.industry=this.value">';
+  }
+  setTimeout(function(){
+    if(S.indConfirmed){
+      var inferredInd = inferInd(S.company);
+      if(S.industry===inferredInd) selPill('ic-yes');
+      else { selPill('ic-no'); pillSideEffect('ic-no','ic'); }
+    }
+  },50);
+}
+
+function renderRole(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 1 of 6 &mdash; About you')+
+      h('div','section-title','Your role')
+    )+
+    h('div','q-card active',
+      h('div','q-label','What is your role at '+S.company+'? '+h('span','q-req','*'))+
+      h('div','pills',
+        pill('Social media manager','role-sm','role',false)+
+        pill('Community manager','role-cm','role',false)+
+        pill('Customer care agent','role-cca','role',false)+
+        pill('Team lead or manager','role-tl','role',false)+
+        pill('Other','role-other','role',false)
+      )
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Please specify your role')+
+      '<input type="text" id="role-oth-inp" placeholder="Your role" oninput="S.roleOther=this.value">',
+      'id="role-oth"'
+    );
+  setTimeout(function(){
+    var rmap={'Social media manager':'role-sm','Community manager':'role-cm','Customer care agent':'role-cca','Team lead or manager':'role-tl','Other':'role-other'};
+    if(S.role && rmap[S.role]){ selPill(rmap[S.role]); pillSideEffect(rmap[S.role],'role'); }
+  },50);
+}
+
+function renderVolume(a){
+  var v = S.volNum>=500?'500+':String(S.volNum);
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 1 of 6 &mdash; About you')+
+      h('div','section-title','Conversation volume')+
+      h('div','section-desc','A conversation = a comment, message, or mention from a distinct person on a distinct topic.')
+    )+
+    h('div','q-card active',
+      h('div','q-label','How many conversations do you receive? '+h('span','q-req','*'))+
+      h('div','q-hint','Drag the slider to your approximate volume.')+
+      h('div','slider-wrap',
+        '<input type="range" min="1" max="500" step="1" value="'+S.volNum+'" oninput="S.volNum=parseInt(this.value);el(\'vv\').textContent=this.value>=500?\'500+\':this.value">'+
+        h('span','slider-val',v,'id="vv"')
+      )+
+      h('div','q-label','Over what period?')+
+      h('div','pills',
+        pill('Per day','period-day','period',false)+
+        pill('Per week','period-week','period',false)+
+        pill('Per month','period-month','period',false)
+      )
+    );
+  setTimeout(function(){
+    var pmap={'Per day':'period-day','Per week':'period-week','Per month':'period-month'};
+    if(S.volPeriod && pmap[S.volPeriod]) selPill(pmap[S.volPeriod]);
+  },50);
+}
+
+function renderManageable(a){
+  var vol = (S.volNum>=500?'500+':S.volNum)+' conversations '+S.volPeriod.toLowerCase();
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 1 of 6 &mdash; About you')+
+      h('div','section-title','Manageability')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Is '+vol+' manageable for your team? '+h('span','q-req','*'))+
+      h('div','pills',
+        pill('Yes, we keep up','mgmt-yes','mgmt',false)+
+        pill('No, we miss things','mgmt-no','mgmt',false)+
+        pill('It depends','mgmt-dep','mgmt',false)
+      )
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Tell us more &mdash; what affects whether you keep up?')+
+      '<textarea id="mgmt-det-inp" placeholder="e.g. Fine day-to-day but product launches overwhelm us" oninput="S.manageableDetail=this.value">'+S.manageableDetail+'</textarea>',
+      'id="mgmt-det"'
+    );
+  setTimeout(function(){
+    var mmap={'yes':'mgmt-yes','no':'mgmt-no','dep':'mgmt-dep'};
+    if(S.manageable && mmap[S.manageable]){ selPill(mmap[S.manageable]); pillSideEffect(mmap[S.manageable],'mgmt'); }
+  },50);
+}
+
+function renderWorkType(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 2 of 6 &mdash; Work type')+
+      h('div','section-title','What does your team do in Nest?')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Are you doing community management, customer care, or both? '+h('span','q-req','*'))+
+      h('div','q-hint','Community management = proactive engagement. Customer care = reactive support and resolution.')+
+      h('div','pills',
+        pill('Community management','wt-cm','wt',false)+
+        pill('Customer care','wt-cc','wt',false)+
+        pill('Both','wt-both','wt',false)+
+        pill('Other','wt-other','wt',false)
+      )
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Please describe your work type')+
+      '<input type="text" id="wt-oth-inp" placeholder="Describe how your team uses Nest" oninput="S.workTypeOther=this.value">',
+      'id="wt-oth"'
+    );
+  setTimeout(function(){
+    var wmap={'Community management':'wt-cm','Customer care':'wt-cc','Both':'wt-both','Other':'wt-other'};
+    if(S.workType && wmap[S.workType]){ selPill(wmap[S.workType]); pillSideEffect(wmap[S.workType],'wt'); }
+  },50);
+}
+
+function renderSpecial(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 2 of 6 &mdash; Work type')+
+      h('div','section-title','Special message types')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Are there message types that require special handling in your industry?')+
+      h('div','q-hint','For '+S.industry+', this might include: '+h('em','',indExamples(S.industry)))+
+      '<textarea id="sp-inp" placeholder="Describe any message types that need special handling..." oninput="S.specialMsgs=this.value">'+S.specialMsgs+'</textarea>'
+    );
+}
+
+function renderRespondTo(a){
+  var opts = [
+    ['Help / customer service questions','rt-help'],
+    ['Invitations to engage (questions, opinions)','rt-engage'],
+    ['Mentions','rt-mentions'],
+    ['Direct messages','rt-dms'],
+    ['Emojis or reactions','rt-emojis'],
+    ['Complaints or negative sentiment','rt-complaints'],
+    ['Other','rt-other']
+  ];
+  var pillsHtml = opts.map(function(o){ return pill(o[0],o[1],'rt',true); }).join('');
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 3 of 6 &mdash; Response preferences')+
+      h('div','section-title','What do you respond to?')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Which types of messages do you typically respond to? '+h('span','q-req','*'))+
+      h('div','q-hint','Select all that apply.')+
+      h('div','pills',pillsHtml+pill('All of the above','rt-all','rt-all',false))
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Please specify')+
+      '<input type="text" id="rt-oth-inp" placeholder="Other type" oninput="S.respondToOther=this.value">',
+      'id="rt-oth"'
+    );
+  el('rt-all').addEventListener('click',function(){
+    var allOn = this.classList.contains('on');
+    opts.forEach(function(o){ var b=el(o[1]); if(b){ allOn?b.classList.remove('on'):b.classList.add('on'); } });
+  });
+  setTimeout(function(){
+    S.respondTo.forEach(function(v){
+      var found = opts.find(function(o){ return o[0]===v; });
+      if(found) selPill(found[1]);
+    });
+  },50);
+}
+
+function renderIgnore(a){
+  var opts = [
+    ['Spam','ig-spam'],['Bot or automated messages','ig-bot'],['Duplicate messages','ig-dup'],
+    ['Abusive language','ig-abuse'],['Generic praise or emojis','ig-praise'],
+    ['Off-topic comments','ig-offtopic'],['Messages in other languages','ig-lang'],
+    ['Competitor mentions','ig-comp'],['Influencer or collab requests','ig-collab'],['Other','ig-other']
+  ];
+  var pillsHtml = opts.map(function(o){ return pill(o[0],o[1],'ig',true); }).join('');
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 3 of 6 &mdash; Response preferences')+
+      h('div','section-title','What do you ignore?')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Which types of messages do you typically ignore?')+
+      h('div','q-hint','Select all that apply.')+
+      h('div','pills',pillsHtml)
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Please specify')+
+      '<input type="text" id="ig-oth-inp" placeholder="Other type" oninput="S.ignoreOther=this.value">',
+      'id="ig-oth"'
+    );
+  setTimeout(function(){
+    S.ignore.forEach(function(v){
+      var found = opts.find(function(o){ return o[0]===v; });
+      if(found) selPill(found[1]);
+    });
+  },50);
+}
+
+function renderSamples(a){
+  if(!S.samples.length){
+    S.samples = MSGS.map(function(m){ return {net:m.net,msg:m.msg,action:null,escalateTo:'',topic:''}; });
+  }
+  var html = h('div','section-header',
+    h('div','section-tag','Section 4 of 6 &mdash; Message training')+
+    h('div','section-title','How would you handle these?')+
+    h('div','section-desc','Choose Reply, Ignore, or Escalate for each message. Optionally add a topic.')
+  );
+  S.samples.forEach(function(s,i){
+    var extraHtml = '';
+    if(s.action==='Escalate'){
+      extraHtml += '<input type="text" value="'+s.escalateTo+'" placeholder="Escalate to whom?" oninput="S.samples['+i+'].escalateTo=this.value">';
+    }
+    extraHtml += '<input type="text" value="'+s.topic+'" placeholder="Apply a topic? (e.g. Complaint, Delivery issue)" oninput="S.samples['+i+'].topic=this.value">';
+    html +=
+      h('div','sample-card',
+        h('div','sample-net',s.net)+
+        h('div','sample-txt','"'+s.msg+'"')+
+        h('div','sample-actions',
+          '<button class="act-btn act-reply'+(s.action==='Reply'?' on':'')+'" onclick="setSA('+i+',\'Reply\')">&#10003; Reply</button>'+
+          '<button class="act-btn act-ignore'+(s.action==='Ignore'?' on':'')+'" onclick="setSA('+i+',\'Ignore\')">&#10005; Ignore</button>'+
+          '<button class="act-btn act-escalate'+(s.action==='Escalate'?' on':'')+'" onclick="setSA('+i+',\'Escalate\')">&#9650; Escalate</button>'
+        )+
+        h('div','sample-extra'+(s.action?' show':''),extraHtml,'id="se'+i+'"')
+      );
+  });
+  a.innerHTML = html;
+}
+
+function setSA(i, action){
+  S.samples[i].action = action;
+  var card = document.querySelectorAll('.sample-card')[i];
+  if(!card) return;
+  card.querySelectorAll('.act-btn').forEach(function(b){ b.classList.remove('on'); });
+  var map={'Reply':0,'Ignore':1,'Escalate':2};
+  var btns = card.querySelectorAll('.act-btn');
+  if(btns[map[action]]) btns[map[action]].classList.add('on');
+  var extra = el('se'+i);
+  if(extra){
+    extra.className = 'sample-extra show';
+    var hasEsc = extra.querySelector('input[placeholder*="Escalate"]');
+    if(action==='Escalate' && !hasEsc){
+      var inp = document.createElement('input');
+      inp.type='text'; inp.placeholder='Escalate to whom?';
+      inp.value=S.samples[i].escalateTo;
+      inp.addEventListener('input',function(){ S.samples[i].escalateTo=this.value; });
+      extra.insertBefore(inp, extra.firstChild);
+    } else if(action!=='Escalate' && hasEsc){
+      hasEsc.remove();
+    }
+  }
+}
+
+function renderS2Intro(a){
+  a.innerHTML = h('div','session-intro',
+    h('div','s-icon','&#9881;')+
+    h('h2','s-title','Session 2 &mdash; How you work')+
+    h('p','s-desc','This session covers your team structure and which Nest features you need configured. Designed for admins and team leads.')+
+    h('p','s-time','Estimated time: 10&ndash;15 minutes')
+  );
+}
+
+function renderAgents(a){
+  var v = S.agentCount>=200?'200+':String(S.agentCount);
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 5 of 6 &mdash; Team structure')+
+      h('div','section-title','Your team')
+    )+
+    h('div','q-card active',
+      h('div','q-label','How many agents will be using Nest? '+h('span','q-req','*'))+
+      h('div','slider-wrap',
+        '<input type="range" min="1" max="200" step="1" value="'+S.agentCount+'" oninput="S.agentCount=parseInt(this.value);el(\'av\').textContent=this.value>=200?\'200+\':this.value">'+
+        h('span','slider-val',v,'id="av"')
+      )
+    );
+}
+
+function renderTeams(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 5 of 6 &mdash; Team structure')+
+      h('div','section-title','Team organisation')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Are your agents organised into teams? '+h('span','q-req','*'))+
+      h('div','pills',
+        pill('Yes','teams-yes','teams',false)+
+        pill('No','teams-no','teams',false)+
+        pill('Not yet, but we plan to','teams-plan','teams',false)
+      )
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','How many teams, and what does each handle?')+
+      '<textarea id="teams-det-inp" placeholder="e.g. Social Care (complaints, DMs), Community (comments, engagement)" oninput="S.teamDetail=this.value">'+S.teamDetail+'</textarea>',
+      'id="teams-det"'
+    );
+  setTimeout(function(){
+    var tmap={'yes':'teams-yes','no':'teams-no','plan':'teams-plan'};
+    if(S.hasTeams && tmap[S.hasTeams]){ selPill(tmap[S.hasTeams]); pillSideEffect(tmap[S.hasTeams],'teams'); }
+  },50);
+}
+
+function renderChanRouting(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 5 of 6 &mdash; Team structure')+
+      h('div','section-title','Channel and language routing')
+    )+
+    h('div','q-card active',
+      h('div','q-label','Do different teams or agents handle different channels, languages, or segments?')+
+      h('div','pills',pill('Yes','cr-yes','cr',false)+pill('No','cr-no','cr',false))
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Tell us more')+
+      '<textarea id="cr-det-inp" placeholder="e.g. Social Care handles Twitter/X DMs. Community handles Instagram. French agents handle European markets." oninput="S.chanDetail=this.value">'+S.chanDetail+'</textarea>',
+      'id="cr-det"'
+    );
+  setTimeout(function(){
+    if(S.chanRouting){ selPill('cr-'+S.chanRouting); pillSideEffect('cr-'+S.chanRouting,'cr'); }
+  },50);
+}
+
+function renderShifts(a){
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 5 of 6 &mdash; Team structure')+
+      h('div','section-title','Operating hours')
+    )+
+    h('div','q-card active',
+      h('div','q-label','What are your operating hours? '+h('span','q-req','*'))+
+      h('div','pills',
+        pill('24/7','shifts-247','shifts',false)+
+        pill('Business hours only','shifts-biz','shifts',false)+
+        pill('Extended hours (evenings/weekends)','shifts-ext','shifts',false)+
+        pill('Varies by team','shifts-var','shifts',false)
+      )
+    )+
+    h('div','q-card hidden',
+      h('div','q-label','Describe your hours and out-of-hours behaviour')+
+      '<textarea id="shifts-det-inp" placeholder="e.g. Mon-Fri 9am-6pm. Out of hours: autoresponse holds in queue." oninput="S.shiftsDetail=this.value">'+S.shiftsDetail+'</textarea>',
+      'id="shifts-det"'
+    );
+  setTimeout(function(){
+    if(S.shifts){ selPill('shifts-'+S.shifts); pillSideEffect('shifts-'+S.shifts,'shifts'); }
+  },50);
+}
+
+function renderFeat(a, key){
+  var f = FEATS.find(function(x){ return x.k===key; });
+  if(!f) return;
+  var val = S.features[key]||{};
+  var inputHtml = '';
+  if(f.tp==='pills'||f.tp==='pillsplus'){
+    inputHtml = h('div','pills',
+      pill('Yes','feat-yes','feat',false)+
+      pill('No','feat-no','feat',false)+
+      pill('Not sure','feat-ns','feat',false)
+    );
+    if(f.tp==='pillsplus'){
+      inputHtml += h('div','q-card hidden',
+        h('div','q-label',f.plusLbl)+
+        '<input type="text" id="feat-plus-inp" placeholder="'+f.plusPh+'" value="'+(val.extra||'')+'" oninput="S.features[\''+key+'\']=S.features[\''+key+'\']||{};S.features[\''+key+'\'].extra=this.value">',
+        'id="feat-plus"'
+      );
+    }
+  } else {
+    inputHtml = '<textarea id="feat-txt" placeholder="'+(f.ph||'')+'" oninput="S.features[\''+key+'\']=S.features[\''+key+'\']||{};S.features[\''+key+'\'].value=this.value">'+(val.value||'')+'</textarea>';
+  }
+  var fIdx = FEATS.findIndex(function(x){ return x.k===key; });
+  var totalFeats = FEATS.length;
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Section 6 of 6 &mdash; Features ('+(fIdx+1)+' of '+totalFeats+')')+
+      h('div','section-title',f.lbl)+
+      h('div','section-desc',f.hint)
+    )+
+    h('div','q-card active',
+      h('div','q-label','Do you need this feature? '+h('span','q-req','*'))+
+      inputHtml
+    );
+  setTimeout(function(){
+    var ans = val.answer;
+    if(ans){
+      var amap={'Yes':'feat-yes','No':'feat-no','Not sure':'feat-ns'};
+      if(amap[ans]){ selPill(amap[ans]); pillSideEffect(amap[ans],'feat'); }
+    }
+  },50);
+}
+
+function renderS3Intro(a){
+  a.innerHTML = h('div','session-intro',
+    h('div','s-icon','&#10003;')+
+    h('h2','s-title','Session 3 &mdash; Review &amp; submit')+
+    h('p','s-desc','Almost done. Review your answers on the next screen, then submit to your Hootsuite consultant.')+
+    h('p','s-time','Estimated time: 5 minutes')
+  );
+}
+
+function renderReview(a){
+  function rrow(q,v){ return h('div','review-row',h('span','review-q',q)+h('span','review-a',v||'&mdash;')); }
+  var featureRows = FEATS.map(function(f){
+    var v = S.features[f.k]||{};
+    var disp = v.answer||(v.value?(v.value.length>60?v.value.substring(0,60)+'&hellip;':v.value):'&mdash;');
+    if(v.extra) disp += ' ('+v.extra+')';
+    return rrow(f.lbl, disp);
+  }).join('');
+  a.innerHTML =
+    h('div','section-header',
+      h('div','section-tag','Session 3 &mdash; Review')+
+      h('div','section-title','Check your answers')+
+      h('div','section-desc','Review everything before submitting.')
+    )+
+    h('div','review-section',
+      h('div','review-head',h('span','review-head-title','About you')+h('span','review-edit','Edit','onclick="goToStep(\'company\')"'))+
+      h('div','review-body',
+        rrow('Company',S.company)+rrow('Industry',S.industry)+rrow('Role',S.role)+
+        rrow('Volume',(S.volNum>=500?'500+':S.volNum)+' '+S.volPeriod.toLowerCase())+
+        rrow('Manageable?',S.manageable+(S.manageableDetail?' &mdash; '+S.manageableDetail:''))
+      )
+    )+
+    h('div','review-section',
+      h('div','review-head',h('span','review-head-title','Work type')+h('span','review-edit','Edit','onclick="goToStep(\'worktype\')"'))+
+      h('div','review-body',rrow('Work type',S.workType)+rrow('Special messages',S.specialMsgs||'None specified'))
+    )+
+    h('div','review-section',
+      h('div','review-head',h('span','review-head-title','Response preferences')+h('span','review-edit','Edit','onclick="goToStep(\'respondto\')"'))+
+      h('div','review-body',rrow('Respond to',S.respondTo.join(', ')||'None')+rrow('Ignore',S.ignore.join(', ')||'None'))
+    )+
+    h('div','review-section',
+      h('div','review-head',h('span','review-head-title','Team structure')+h('span','review-edit','Edit','onclick="goToStep(\'agents\')"'))+
+      h('div','review-body',
+        rrow('Agents',S.agentCount>=200?'200+':S.agentCount)+
+        rrow('Teams',S.hasTeams+(S.teamDetail?' &mdash; '+S.teamDetail:''))+
+        rrow('Channel routing',S.chanRouting+(S.chanDetail?' &mdash; '+S.chanDetail:''))+
+        rrow('Operating hours',S.shifts+(S.shiftsDetail?' &mdash; '+S.shiftsDetail:''))
+      )
+    )+
+    h('div','review-section',
+      h('div','review-head',h('span','review-head-title','Features')+h('span','review-edit','Edit','onclick="goToStep(\'feat_autoresponder\')"'))+
+      h('div','review-body',featureRows)
+    )+
+    h('div','q-card','','style="margin-top:1.5rem"')+
+    '';
+  var emailCard = a.querySelector('.q-card:last-child');
+  if(emailCard){
+    emailCard.innerHTML =
+      h('div','q-label','Consultant email')+
+      h('div','q-hint','Responses will be sent to this address.')+
+      '<input type="email" id="c-email" value="'+S.consultantEmail+'" oninput="S.consultantEmail=this.value">';
+  }
+}
+
+function renderComplete(a){
+  a.innerHTML = h('div','complete-screen',
+    h('div','complete-icon','&#10003;')+
+    h('div','complete-title','Questionnaire complete')+
+    h('div','complete-desc','Thank you, '+S.company+'. Your responses have been prepared for your Hootsuite consultant.<br><br>Click below to open your email client and send your completed questionnaire to '+h('strong','',S.consultantEmail)+'.')+
+    h('div','btn-wrap',
+      '<button class="btn btn-success" onclick="doEmail()">&#9993;&nbsp; Send to consultant</button>'+
+      '<button class="btn btn-dl" onclick="doDownload()">&#8595;&nbsp; Download JSON only</button>'
+    )+
+    h('p','','','style="font-size:11px;color:var(--hint);margin-top:1.5rem;line-height:1.6"')+
+    ''
+  );
+  var note = a.querySelector('p:last-child');
+  if(note) note.textContent = 'Your consultant will use these responses to configure your Hootsuite Nest workspace.';
+}
+
+function buildJSON(){
+  var rtOpts = [['rt-help','Help / customer service questions'],['rt-engage','Invitations to engage'],['rt-mentions','Mentions'],['rt-dms','Direct messages'],['rt-emojis','Emojis or reactions'],['rt-complaints','Complaints or negative sentiment'],['rt-other','Other']];
+  var igOpts = [['ig-spam','Spam'],['ig-bot','Bot or automated messages'],['ig-dup','Duplicate messages'],['ig-abuse','Abusive language'],['ig-praise','Generic praise or emojis'],['ig-offtopic','Off-topic comments'],['ig-lang','Messages in other languages'],['ig-comp','Competitor mentions'],['ig-collab','Influencer or collab requests'],['ig-other','Other']];
+  S.respondTo = rtOpts.filter(function(o){ var b=el(o[0]); return b&&b.classList.contains('on'); }).map(function(o){ return o[1]; });
+  S.ignore = igOpts.filter(function(o){ var b=el(o[0]); return b&&b.classList.contains('on'); }).map(function(o){ return o[1]; });
+  return {
+    meta:{ generated:new Date().toISOString(), company:S.company, industry:S.industry, consultantEmail:S.consultantEmail },
+    brand:{ primary:S.brandPrimary, secondary:S.brandSecondary },
+    session1:{ company:S.company, industry:S.industry, role:S.role, volume:{count:S.volNum>=500?'500+':S.volNum, period:S.volPeriod}, manageable:S.manageable, manageableDetail:S.manageableDetail, workType:S.workType, specialMessages:S.specialMsgs, respondTo:S.respondTo, ignore:S.ignore, sampleTraining:S.samples },
+    session2:{ agentCount:S.agentCount>=200?'200+':S.agentCount, hasTeams:S.hasTeams, teamDetail:S.teamDetail, channelRouting:S.chanRouting, channelRoutingDetail:S.chanDetail, shifts:S.shifts, shiftsDetail:S.shiftsDetail, features:S.features }
+  };
+}
+
+function doDownload(){
+  var data = JSON.stringify(buildJSON(),null,2);
+  var blob = new Blob([data],{type:'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href=url; a.download=(S.company||'company').replace(/\s+/g,'-').toLowerCase()+'-nest-questionnaire.json';
+  a.click(); URL.revokeObjectURL(url);
+}
+
+function doEmail(){
+  doDownload();
+  var subj = encodeURIComponent('Hootsuite Nest Setup Questionnaire — '+S.company);
+  var body = encodeURIComponent('Hi,\n\nPlease find attached the completed Hootsuite Nest setup questionnaire for '+S.company+'.\n\nCompany: '+S.company+'\nIndustry: '+S.industry+'\nAgents: '+(S.agentCount>=200?'200+':S.agentCount)+'\n\nThe JSON file with full responses is attached.\n\nKind regards');
+  window.location.href='mailto:'+S.consultantEmail+'?subject='+subj+'&body='+body;
+}
+
+function saveCurrentStep(){
+  var step = STEPS[S.step];
+  if(step==='brand'){
+    var bp=el('bp'),bs=el('bs');
+    if(bp) S.brandPrimary=bp.value;
+    if(bs) S.brandSecondary=bs.value;
+  }
+  if(step==='company'){ var c=el('co'); if(c) S.company=c.value.trim(); }
+  if(step==='industry'){
+    var spec=el('ind-spec');
+    if(spec&&!spec.classList.contains('hidden')){ var ii=el('ind-inp'); if(ii) S.industry=ii.value.trim(); }
+    S.indConfirmed=true;
+  }
+  if(step==='samples'){
+    S.samples.forEach(function(s,i){
+      var escInp=document.querySelectorAll('.sample-extra')[i]&&document.querySelectorAll('.sample-extra')[i].querySelector('input[placeholder*="Escalate"]');
+      if(escInp) s.escalateTo=escInp.value;
+    });
+  }
+  if(step.indexOf('feat_')===0){
+    var key=step.replace('feat_','');
+    var plusInp=el('feat-plus-inp');
+    if(plusInp){ S.features[key]=S.features[key]||{}; S.features[key].extra=plusInp.value; }
+    var txtInp=el('feat-txt');
+    if(txtInp){ S.features[key]=S.features[key]||{}; S.features[key].value=txtInp.value; }
+  }
+}
+
+function validate(){
+  var step=STEPS[S.step];
+  if(step==='company'&&!S.company.trim()){ showErr('Please enter your company name.'); return false; }
+  if(step==='role'&&!S.role){ showErr('Please select your role.'); return false; }
+  if(step==='volume'&&!S.volPeriod){ showErr('Please select a time period.'); return false; }
+  if(step==='manageable'&&!S.manageable){ showErr('Please select an option.'); return false; }
+  if(step==='worktype'&&!S.workType){ showErr('Please select your work type.'); return false; }
+  if(step==='shifts'&&!S.shifts){ showErr('Please select your operating hours.'); return false; }
+  return true;
+}
+
+function showErr(msg){
+  var e=document.querySelector('.err'); if(e) e.remove();
+  var d=document.createElement('div'); d.className='err'; d.textContent=msg;
+  var nb=el('nav-bar'); if(nb) nb.insertAdjacentElement('beforebegin',d);
+  setTimeout(function(){ d.remove(); },3000);
+}
+
+function goNext(){
+  if(!validate()) return;
+  saveCurrentStep();
+  if(S.step<STEPS.length-1){ S.step++; window.scrollTo(0,0); render(); }
+}
+
+function goBack(){
+  if(S.step>0){ S.step--; window.scrollTo(0,0); render(); }
+}
+
+function goToStep(stepId){
+  var idx=STEPS.indexOf(stepId);
+  if(idx>=0){ S.step=idx; window.scrollTo(0,0); render(); }
+}
+
+function updateNav(){
+  var step=STEPS[S.step];
+  var back=el('btn-back'), next=el('btn-next'), hint=el('nav-hint');
+  if(back) back.className='btn btn-secondary'+(S.step>0?'':' hidden');
+  if(next){
+    if(step==='complete'){ next.style.display='none'; }
+    else {
+      next.style.display='block';
+      next.textContent=step==='cover'?'Start \u2192':step==='review'?'Submit \u2192':'Continue \u2192';
+    }
+  }
+  if(hint){
+    var s1e=STEPS.indexOf('samples'), s2e=STEPS.indexOf('s3intro');
+    if(S.step<=s1e) hint.textContent='Session 1 of 3 \u2014 Who you are';
+    else if(S.step<=s2e) hint.textContent='Session 2 of 3 \u2014 How you work';
+    else hint.textContent='Session 3 of 3 \u2014 Review & submit';
+  }
+}
+
+function injectProgress(){
+  if(document.querySelector('.progress-bar')) return;
+  var bar=document.createElement('div'); bar.className='progress-bar';
+  bar.innerHTML='<div class="progress-top"><span class="progress-label">Setup progress</span><span class="progress-pct" id="pp">0%</span></div><div class="progress-track"><div class="progress-fill" id="pf" style="width:0%"></div></div><div class="session-dots"><div class="sdot" id="sd0"></div><div class="sdot" id="sd1"></div><div class="sdot" id="sd2"></div></div>';
+  var pg=document.querySelector('.page'); if(pg) pg.insertAdjacentElement('afterbegin',bar);
+}
+
+function updateProgress(){
+  var pct=Math.round(S.step/(STEPS.length-1)*100);
+  var pf=el('pf'), pp=el('pp');
+  if(pf) pf.style.width=pct+'%';
+  if(pp) pp.textContent=pct+'%';
+  var s1e=STEPS.indexOf('samples'), s2e=STEPS.indexOf('s3intro');
+  function sdot(id,state){ var d=el(id); if(d) d.className='sdot'+(state?' '+state:''); }
+  sdot('sd0',S.step>s1e?'done':S.step>0?'active':'');
+  sdot('sd1',S.step>s2e?'done':S.step>s1e?'active':'');
+  sdot('sd2',S.step===STEPS.length-1?'done':S.step>s2e?'active':'');
+}
+
+// Boot
+render();
+setTimeout(function(){
+  if(S.step>0){ injectProgress(); updateProgress(); }
+  var origRender=render;
+  render=function(){
+    origRender();
+    if(S.step>0){ setTimeout(injectProgress,50); setTimeout(updateProgress,60); }
+  };
+},50);
+</script>
+</body>
+</html>
